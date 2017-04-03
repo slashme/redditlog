@@ -1,0 +1,7 @@
+#!/bin/bash
+export URL="https://www.reddit.com/r/dataisbeautiful/comments/637yhl/a_reddit_posts_upvotes_and_downvotes_over_time_oc/"
+while true
+  do curl -s -A "Mozilla/4.0" $URL| xmllint --html --xpath "//div[@class='score likes']/node()" - 2>/dev/null | ts >> log
+  echo '' >> log
+  sleep 20
+done
