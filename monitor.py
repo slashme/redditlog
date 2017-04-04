@@ -12,7 +12,6 @@ while(True):
     #Grab the data:
     r = requests.get(r'http://www.reddit.com/r/dataisbeautiful/.json', params=payload)
     requesttime=time.time()
-    print(r)
     #Skip parsing if there's an error response:
     if not ('error' in r.json()): 
         #Iterate over all the returned items:
