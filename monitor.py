@@ -25,7 +25,7 @@ while(True):
                 c.execute("INSERT INTO scores(timestamp, score, num_comments, ups, downs, postid, gilded) VALUES(?,?,?,?,?,?,?)", (requesttime, i['data']['score'], i['data']['num_comments'], i['data']['ups'], i['data']['downs'], i['data']['id'], i['data']['gilded']))
             conn.commit()
     #Delay before reloading:
-    time.sleep(60)
+    time.sleep(120)
 
 conn.close()
 
