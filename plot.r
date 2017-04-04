@@ -4,7 +4,7 @@ log=read.table("log", colClasses=c(rep("character", 3), "integer"))
 log$V3 = as.POSIXlt(paste(log$V1, log$V2, log$V3), format = "%b %d %H:%M:%S", tz="UTC")
 #Set up the plot device:
 png(file = "plot.png", width=1024, height = 1024, units="px", pointsize=30)
-#Plot a snarky graph:
+#Plot a graph:
 plot(log$V3, log$V4, type="l", main="Kink in the karma of a DataIsBeautiful post", ylab="Score (net upvotes)", xlab="Time", ylim=c(0,max(log$V4)))
 #Close the device:
 dev.off()
