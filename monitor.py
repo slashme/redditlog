@@ -12,7 +12,12 @@ while(True):
     #Grab info from two different subreddits:
     for subred in ("dataisbeautiful", "askreddit"):
         #Grab the data:
-        r = requests.get(r'http://www.reddit.com/r/'+subred+'/.json', params=payload)
+	try:
+		r = requests.get(r'http://www.reddit.com/r/'+subred+'/.json', params=payload)
+	except: #Brutal catch-anything clause, because I don't know net errors.
+		print("error, trying again")
+		time.sleep(10)
+		break
         print(r)
         print(subred)
         requesttime=time.time()
