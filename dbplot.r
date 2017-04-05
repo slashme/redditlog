@@ -12,7 +12,18 @@ plot(1, type="n",
      main="Trajectories", ylab="Score (net upvotes)", xlab="Age [days]",
      xlim=c(0,6), ylim=range(res$score)
      )
-for (i in unique(res[res$subreddit == "The_Donald", ]$id)) { lines(res[res$id == i, ]$age, res[res$id == i, ]$score, col="red")}
-for (i in unique(res[res$subreddit == "AskReddit", ]$id)) { lines(res[res$id == i, ]$age, res[res$id == i, ]$score, col="blue")}
-for (i in unique(res[res$subreddit == "dataisbeautiful", ]$id)) { lines(res[res$id == i, ]$age, res[res$id == i, ]$score, col="green")}
-legend('topleft', c("AskReddit", "dataisbeautiful", "The_Donald"), lty=1, col=c("blue", "green", "red"))
+#Which subreddits to plot in which colours:
+plotlist = list(
+The_Donald      ="red",
+AskReddit       ="blue",
+dataisbeautiful ="green"
+)
+
+#Iterate over the listed subreddits, plotting the data for each:
+for (r in names(plotlist)) {
+  for (i in unique(res[res$subreddit == r, ]$id)) {
+    lines(res[res$id == i, ]$age, res[res$id == i, ]$score, col=as.character(plotlist[r]))
+  }
+}
+#Create a legend with the names and colors:
+legend('topleft', names(plotlist), lty=1, col=as.character(plotlist))
