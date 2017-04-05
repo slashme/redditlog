@@ -31,8 +31,9 @@ dataisbeautiful ="green"
 #Iterate over the listed subreddits, plotting the data for each:
 for (r in names(plotlist)) {
   for (i in unique(res[res$subreddit == r, ]$id)) {
-    if (min(res[res$id == i, ]$age) < cutoff) {
-      lines(res[res$id == i, ]$age, res[res$id == i, ]$score, col=as.character(plotlist[r]))
+    resi=res[res$id == i, ]
+    if (min(resi$age) < cutoff) {
+      lines(resi$age, resi$score, col=as.character(plotlist[r]))
     } else {
     }
   }
