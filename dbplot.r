@@ -11,5 +11,5 @@ plot(1, type="n",
      )
 for (i in unique(res[res$subreddit == "AskReddit", ]$id)) { lines(res[res$id == i, ]$age, res[res$id == i, ]$score, col="blue")}
 for (i in unique(res[res$subreddit == "dataisbeautiful", ]$id)) { lines(res[res$id == i, ]$age, res[res$id == i, ]$score, col="green")}
-for (i in unique(res[res$subreddit == "thedonald", ]$id)) { lines(res[res$id == i, ]$age, res[res$id == i, ]$score, col="red")}
-legend('topleft', c("AskReddit", "dataisbeautiful", "thedonald"), lty=1, col=c("blue", "green", "red"))
+for (i in unique(res[res$subreddit == "The_Donald", ]$id)) { lines(res[res$id == i, ]$age, res[res$id == i, ]$score, col="red")}
+legend('topleft', c("AskReddit", "dataisbeautiful", "The_Donald"), lty=1, col=c("blue", "green", "red"))
