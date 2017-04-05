@@ -39,3 +39,4 @@ for (r in names(plotlist)) {
 }
 #Create a legend with the names and colors:
 legend('topright', names(plotlist), lty=1, col=as.character(plotlist))
+dev.off()
