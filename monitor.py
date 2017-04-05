@@ -9,8 +9,8 @@ payload = {'limit': '100'}
 
 #Main loop:
 while(True):
-    #Grab info from two different subreddits:
-    for subred in ("dataisbeautiful", "askreddit"):
+    #Select which subreddits to grab from:
+    for subred in ("dataisbeautiful", "askreddit", "thedonald"):
         #Grab the data:
 	try:
 		r = requests.get(r'http://www.reddit.com/r/'+subred+'/.json', params=payload)
