@@ -25,6 +25,8 @@ plot(1, type="n",
 plotlist = list(
 The_Donald      ="red",
 AskReddit       ="blue",
+IAmA            ="black",
+gonewild        ="pink",
 dataisbeautiful ="green"
 )
 
