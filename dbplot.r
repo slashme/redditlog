@@ -2,7 +2,7 @@ library("RSQLite") #SQLite database driver
 
 #Open the database and pull all the posts:
 con = dbConnect(drv="SQLite", dbname="redditdata.db")
-res = dbGetQuery(con, 'SELECT a.timestamp, a.score, a.num_comments, c.created, c.id, c.subreddit FROM scores a LEFT JOIN posts c ON a.postid=c.id')
+res = dbGetQuery(con, 'SELECT a.timestamp, a.score, a.num_comments, a.rank, c.created, c.id, c.subreddit FROM scores a LEFT JOIN posts c ON a.postid=c.id')
 
 #Create a column with the age in days of the post at the time of sampling:
 res$age = (res$timestamp - res$created)/60/60/24
