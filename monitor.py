@@ -18,14 +18,14 @@ while(True):
 		print("error, trying again")
 		time.sleep(10)
 		break
-        print(r)
-        print(subred)
-        requesttime=time.time()
+        print(r) #Prints the result code to the console so that I can see whether it was successful
+        print(subred) #Prints the name of the subreddit so that I can see what was polled
+        requesttime=time.time() #Time when the request was done for timestamping purposes.
         #Skip parsing if there's an error response:
         if not ('error' in r.json()): 
             #Iterate over all the returned items:
             for i in r.json()['data']['children']:
-                #Skip non-posts and text posts and stickied posts:
+                #Skip non-posts and stickied posts:
                 if(i['kind']=='t3' and i['data']['stickied']==False):
                     #Insert the post into the DB, unless it already exists:
                     c.execute("INSERT OR IGNORE INTO posts(subreddit, id, title, created) VALUES(?,?,?,?)", (i['data']['subreddit'], i['data']['id'], i['data']['title'], i['data']['created_utc']))
