@@ -9,7 +9,7 @@ payload = {'limit': '100'} #Download the list of the top 100 posts.
 
 while(True): #Main loop: just keep sucking data until the program is killed.
     #Select which subreddits to grab from:
-    for subred in ("dataisbeautiful", "askreddit", "the_donald"):
+    for subred in ("dataisbeautiful", "askreddit", "the_donald", "IAmA", "gonewild"):
         #Grab the data:
 	try:
 		r = requests.get(r'http://www.reddit.com/r/'+subred+'/.json', params=payload)
@@ -21,12 +21,14 @@ while(True): #Main loop: just keep sucking data until the program is killed.
         print(subred) #Prints the name of the subreddit so that I can see what was polled
         requesttime=time.time() #Time when the request was done for timestamping purposes.
         if not ('error' in r.json()): #Skip parsing json result if there's an error response
+            rankcount=0 #Position of the post in the subreddit. I'm not confident that this counter will work though. Is the list of items guaranteed to be in the same order that they were sent from the JSON?
             for i in r.json()['data']['children']: #Iterate over all the returned items
                 if(i['kind']=='t3' and i['data']['stickied']==False): #Skip non-posts and stickied posts
                     #Insert the post into the DB, unless it already exists:
                     c.execute("INSERT OR IGNORE INTO posts(subreddit, id, title, created) VALUES(?,?,?,?)", (i['data']['subreddit'], i['data']['id'], i['data']['title'], i['data']['created_utc']))
                     #Log data into the scores table:
-                    c.execute("INSERT INTO scores(timestamp, score, num_comments, ups, downs, postid, gilded) VALUES(?,?,?,?,?,?,?)", (requesttime, i['data']['score'], i['data']['num_comments'], i['data']['ups'], i['data']['downs'], i['data']['id'], i['data']['gilded']))
+                    c.execute("INSERT INTO scores(timestamp, score, num_comments, ups, downs, postid, gilded, rank) VALUES(?,?,?,?,?,?,?,?)", (requesttime, i['data']['score'], i['data']['num_comments'], i['data']['ups'], i['data']['downs'], i['data']['id'], i['data']['gilded'], rankcount))
+                    rankcount += 1 
             conn.commit()
     time.sleep(120) #Wait 2 minutes before next download
 
