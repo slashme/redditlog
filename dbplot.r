@@ -1,5 +1,6 @@
 library("RSQLite") #SQLite database driver
-library("scatterplot3d") #3D scatterplots
+#library("scatterplot3d") #3D scatterplots
+library("rgl") #Drawing 3D stuff
 
 #Open the database and pull all the posts:
 con = dbConnect(drv="SQLite", dbname="redditdata.db")
@@ -47,7 +48,7 @@ dev.off()
 
 ############3D plot############
 #Set up graphics device:
-png(file = "3dplot.png", width=1024, height = 1024, units="px", pointsize=20)
+#png(file = "3dplot.png", width=1024, height = 1024, units="px", pointsize=20)
 
 #Corners of the plot:
 mina=min(res$age)
@@ -60,16 +61,19 @@ corners = matrix(c(mina,mins,minr, maxa,maxs,maxr), nrow = 2, ncol = 3, byrow = 
                dimnames = list(c("row1", "row2"),
                                c("Age [days]", "Score (net karma)", "Position in top 100 posts")))
 
+#Set up graphics device:
+#png(file = paste0("3dplot", ang, ".png"), width=1024, height = 1024, units="px", pointsize=20)
+
 #Create an empty 3D plot:
-s3d = scatterplot3d(corners, color="white")
+#s3d = scatterplot3d(corners, color="white", angle=ang)
+plot3d(corners, col="white")
 
 #Iterate over the listed subreddits, plotting the data for each:
 for (r in names(plotlist)) {
   for (i in unique(res[res$subreddit == r, ]$id)) {
     resi=res[res$id == i, ]
-    s3d$points3d(resi$age, resi$score, resi$rank, type="l", col=as.character(plotlist[r]))
+    #s3d$points3d(resi$age, resi$score, resi$rank, type="l", col=as.character(plotlist[r]))
+    lines3d(resi$age, resi$score, resi$rank, col=as.character(plotlist[r]))
   }
 }
-
-dev.off()
-
+#dev.off()
