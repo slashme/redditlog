@@ -59,14 +59,14 @@ parnames = c("age", "score", "rank", "num_comments")
 #Corners of the plot:
 for (r in names(plotlist)) {
     resi=res[res$subreddit == r, ]
-    corners[1,1]=min(mina, resi$age)
-    corners[2,1]=max(maxa, resi$age)
-    corners[1,2]=min(mins, resi$score)
-    corners[2,2]=max(maxs, resi$score)
-    corners[1,3]=min(minr, resi$rank)
-    corners[2,3]=max(maxr, resi$rank)
-    corners[1,4]=min(minc, resi$num_comments)
-    corners[2,4]=max(maxc, resi$num_comments)
+    corners[1,1]=min(corners[1,1], resi$age)
+    corners[2,1]=max(corners[2,1], resi$age)
+    corners[1,2]=min(corners[1,2], resi$score)
+    corners[2,2]=max(corners[2,2], resi$score)
+    corners[1,3]=min(corners[1,3], resi$rank)
+    corners[2,3]=max(corners[2,3], resi$rank)
+    corners[1,4]=min(corners[1,4], resi$num_comments)
+    corners[2,4]=max(corners[2,4], resi$num_comments)
 }
 
 #Grab only 3 axes (edit the next two lines to choose axes - note the comma!):
