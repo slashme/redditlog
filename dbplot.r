@@ -70,8 +70,8 @@ for (r in names(plotlist)) {
 }
 
 #Grab only 3 axes (edit the next two lines to choose axes - note the comma!):
-corners = corners[,-3]
-parnames = parnames[-3]
+corners = corners[,-4]
+parnames = parnames[-4]
 
 #Create an empty 3D plot: FIXME: Can I plot invisible dots? Is there a better way?
 plot3d(corners, col="white")
@@ -80,7 +80,8 @@ plot3d(corners, col="white")
 for (r in names(plotlist)) {
   for (i in unique(res[res$subreddit == r, ]$id)) {
     resi=res[res$id == i, ]
-    lines3d(resi[,parnames[1]], resi[,parnames[2]], resi[,parnames[3]], col=as.character(plotlist[r]))
+    if(min(resi$rank) < runif(1,10,100)){
+      lines3d(resi[,parnames[1]], resi[,parnames[2]], resi[,parnames[3]], col=as.character(plotlist[r]))
+    }
   }
 }
-#dev.off()
