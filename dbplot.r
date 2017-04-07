@@ -14,9 +14,9 @@ res$age = (res$timestamp - res$created)/60/60/24
 plotlist = list(
 The_Donald      ="pink",
 AskReddit       ="blue",
-#IAmA            ="black",
-gonewild        ="red"
-#dataisbeautiful ="green",
+IAmA            ="black",
+gonewild        ="red",
+dataisbeautiful ="green"
 )
 
 ############2D plot############
@@ -81,7 +81,7 @@ plotids = plot3d(corners, col="white")
 for (r in names(plotlist)) {
   for (i in unique(res[res$subreddit == r, ]$id)) {
     resi=res[res$id == i, ]
-    if(min(resi$rank) < min(runif(3,10,100))){ #Skip randomly selected posts with poor rank in subreddit
+    if((min(resi$rank) < min(runif(3,10,100))) || (max(resi$age) > corners[2,1]/2.0)){ #Skip randomly selected posts with poor rank in subreddit except if they're old
       lines3d(resi[,parnames[1]], resi[,parnames[2]], resi[,parnames[3]], col=as.character(plotlist[r]))
     }
   }
