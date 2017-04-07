@@ -1,6 +1,7 @@
 library("RSQLite") #SQLite database driver
 #library("scatterplot3d") #3D scatterplots
 library("rgl") #Drawing 3D stuff
+library("rglwidget") #Drawing 3D stuff
 
 #Open the database and pull all the posts:
 con = dbConnect(drv="SQLite", dbname="redditdata.db")
@@ -74,14 +75,17 @@ corners = corners[,-4]
 parnames = parnames[-4]
 
 #Create an empty 3D plot: FIXME: Can I plot invisible dots? Is there a better way?
-plot3d(corners, col="white")
+plotids = plot3d(corners, col="white")
 
 #Iterate over the listed subreddits, plotting the data for each:
 for (r in names(plotlist)) {
   for (i in unique(res[res$subreddit == r, ]$id)) {
     resi=res[res$id == i, ]
-    if(min(resi$rank) < runif(1,10,100)){
+    if(min(resi$rank) < min(runif(3,10,100))){ #Skip randomly selected posts with poor rank in subreddit
       lines3d(resi[,parnames[1]], resi[,parnames[2]], resi[,parnames[3]], col=as.character(plotlist[r]))
     }
   }
 }
+#Generate a standalone RGL widget as a website.
+#This needs to be run manually - doesn't work from Rscript or "source" within R:
+rglwidget(elementId = "plot3drgl")
