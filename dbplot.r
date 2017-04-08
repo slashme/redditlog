@@ -5,18 +5,25 @@ library("rglwidget") #Drawing 3D stuff
 
 #Open the database and pull all the posts:
 con = dbConnect(drv="SQLite", dbname="redditdata.db")
+#Make a selection of rows to plot: two rows per subreddit per minimum rank. Select two rows by grouping by even/odd number of comments. To get more rows, mod by a bigger number:
+plotthese = dbGetQuery(con, 'SELECT subreddit, postid, minrank FROM (select postid, num_comments, min(rank) AS minrank FROM scores GROUP BY postid) LEFT JOIN posts ON postid = id GROUP BY minrank,subreddit,num_comments % 4')
+#plotthese = dbGetQuery(con, 'SELECT subreddit, postid, minrank FROM (select postid, num_comments, min(rank) AS minrank FROM scores GROUP BY postid) LEFT JOIN posts ON postid = id ') #Nerfed version - does basically nothing
+#Get all the individually logged post scores:
 res = dbGetQuery(con, 'SELECT a.timestamp, a.score, a.num_comments, a.rank, c.created, c.id, c.subreddit FROM scores a LEFT JOIN posts c ON a.postid=c.id')
 
+#Keep only selected rows:
+resplot = res[res$id %in% plotthese$postid,]
+
 #Create a column with the age in days of the post at the time of sampling:
-res$age = (res$timestamp - res$created)/60/60/24
+resplot$age = (resplot$timestamp - resplot$created)/60/60/24
 
 #Which subreddits to plot in which colours:
 plotlist = list(
-The_Donald      ="pink",
-AskReddit       ="blue",
-IAmA            ="black",
-gonewild        ="red",
-dataisbeautiful ="green"
+The_Donald      ="pink"
+,gonewild        ="red"
+,AskReddit       ="blue"
+,IAmA            ="black"
+,dataisbeautiful ="green"
 )
 
 ############2D plot############
@@ -57,9 +64,10 @@ corners = matrix(rep(0,8), nrow = 2, ncol = 4, byrow = TRUE,
                   c("Age [days]", "Score (net karma)", "Position in top 100 posts", "Comments")))
 #And a list to hold the actual parameters (there must be a better way…)
 parnames = c("age", "score", "rank", "num_comments")
-#Corners of the plot:
+
+#Corners of the plot: Do this for each selected subreddit, because we don't know what was selected
 for (r in names(plotlist)) {
-    resi=res[res$subreddit == r, ]
+    resi=resplot[resplot$subreddit == r, ]
     corners[1,1]=min(corners[1,1], resi$age)
     corners[2,1]=max(corners[2,1], resi$age)
     corners[1,2]=min(corners[1,2], resi$score)
@@ -79,11 +87,9 @@ plotids = plot3d(corners, col="white")
 
 #Iterate over the listed subreddits, plotting the data for each:
 for (r in names(plotlist)) {
-  for (i in unique(res[res$subreddit == r, ]$id)) {
-    resi=res[res$id == i, ]
-    if((min(resi$rank) < min(runif(3,10,100))) || (max(resi$age) > corners[2,1]/2.0)){ #Skip randomly selected posts with poor rank in subreddit except if they're old
-      lines3d(resi[,parnames[1]], resi[,parnames[2]], resi[,parnames[3]], col=as.character(plotlist[r]))
-    }
+  for (i in unique(resplot[resplot$subreddit == r, ]$id)) {
+    resi=resplot[resplot$id == i, ]
+    lines3d(resi[,parnames[1]], resi[,parnames[2]], resi[,parnames[3]], col=as.character(plotlist[r]))
   }
 }
 #Generate a standalone RGL widget as a website.
